@@ -1,6 +1,8 @@
 #!/bin/bash
 unset $choice
 unset $web
+unset $exitstatus
+unset $option
 usage (){
   echo "Usage: toolbox command [parameter] "
   echo "upgrade - Run 'apt update' and 'apt upgrade'."
@@ -12,6 +14,7 @@ usage (){
   echo "picture - Run 'timg'."
   echo "fbterm - Run 'fbterm'."
   echo "disk - Run 'gparted'."
+  echo "memory - Drop caches."
   exit 1
 }
 
@@ -105,6 +108,25 @@ case $1 in
   fbterm)
     fcitx-fbterm-helper -l
     exit
+    ;;
+  memory)
+    permission
+    if [[ $? -eq 0 ]]; then
+      option=$(whiptail --title "Select a mode" --menu "There are 3 modes you can choose." 15 60 4 \
+      "0" "Do nothing. Don't drop any caches." \
+      "1" "Drop pagecache." \
+      "2" "Drop dentries and inodes." \
+      "3" "Drop pagecache, dentries and inodes." 3>&1 1>&2 2>&3)
+      exitstatus=$?
+      if [ $exitstatus = 0 ]; then
+        sync
+        sudo su -c "echo $option > /proc/sys/vm/drop_caches"
+      else
+        echo "You chose to cancel."
+      fi
+    else
+      echo "You chose to cancel."
+    fi
     ;;
   *)
     usage
