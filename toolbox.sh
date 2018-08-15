@@ -142,7 +142,7 @@ case $1 in
       if [ $exitstatus = 0 ]; then
         case $option in
           1)
-            exec bleachbit
+            pkexec bleachbit
             ;;
           2)
             sudo apt clean
