@@ -15,6 +15,7 @@ usage (){
   echo "fbterm - Run 'fbterm'."
   echo "disk - Run 'gparted'."
   echo "memory - Drop caches."
+  echo "clean - Release your disk usage."
   exit 1
 }
 
@@ -121,6 +122,40 @@ case $1 in
       if [ $exitstatus = 0 ]; then
         sync
         sudo su -c "echo $option > /proc/sys/vm/drop_caches"
+      else
+        echo "You chose to cancel."
+      fi
+    else
+      echo "You chose to cancel."
+    fi
+    ;;
+  clean)
+    permission
+    if [[ $? -eq 0 ]]; then
+      option=$(whiptail --title "Options" --menu "There are 5 options you can choose." 15 60 6 \
+      "0" "Do nothing. Exit immediately." \
+      "1" 'Open "bleachbit".' \
+      "2" 'Run "sudo apt clean".' \
+      "3" 'Run "sudo apt autoclean".' \
+      "4" 'Run "sudo apt autoremove".' 3>&1 1>&2 2>&3)
+      exitstatus=$?
+      if [ $exitstatus = 0 ]; then
+        case $option in
+          1)
+            exec bleachbit
+            ;;
+          2)
+            sudo apt clean
+            ;;
+          3)
+            sudo apt autoclean
+            ;;
+          4)
+            sudo apt autoremove
+            ;;
+          *)
+            echo "You chose to cancel."
+        esac
       else
         echo "You chose to cancel."
       fi
