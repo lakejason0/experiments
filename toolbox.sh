@@ -45,7 +45,7 @@ case $1 in
     fi
     ;;
   find)
-    if [[ -e "/home/sunliyuan/filefind.sh" && -x "/home/sunliyuan/filefind.sh" && -z $2 ]]; then
+    if [[ -e "/home/lakejason0/filefind.sh" && -x "/home/lakejason0/filefind.sh" && -z $2 ]]; then
       /home/sunliyuan/filefind.sh
       exit
     elif [[ -n $2 && -d $2 ]]; then
